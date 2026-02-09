@@ -131,3 +131,8 @@ void send_data_to_pcm() {
         }
     }
 }
+
+
+void I2S_SendData_DMA(int16_t *data, uint16_t len){
+    
+}

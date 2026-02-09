@@ -8,7 +8,7 @@
 #include "buttons.h"
 
 int read_input_pot(){
-    return null;
+    return 0;
 }
 
 void Init_Butt(int butt_id){
@@ -22,14 +22,14 @@ void Init_butts (void)
 }
 
 char Butt_pushed(int butt_id){
-	return null;
+	return 0;
 }
 
 
 char Inc_Oct_Butt_Clicked(){
-	return null;
+	return 0;
 }
 
 char Dec_Oct_Butt_Clicked(){
-	return null;
+	return 0;
 }

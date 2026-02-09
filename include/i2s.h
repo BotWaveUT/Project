@@ -2,6 +2,8 @@
 #define _I2S_H
 
 #include "peripherals/gpio.h"
+#include <stdint.h>
+
 
 #define PCM_BASE         (PBASE + 0x203000)
 #define GPIO_BASE        (PBASE + 0x200000)
@@ -21,6 +23,9 @@
 
 void init_I2S();
 void send_data_to_pcm();
+
+
+void I2S_SendData_DMA(int16_t *data, uint16_t len);
 
 
 #endif //_I2S_H
