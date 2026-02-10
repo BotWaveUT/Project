@@ -4,6 +4,7 @@
 #include "mini_uart.h"
 #include "utils.h"
 #include "i2s.h"
+#include "dma.h"
 
 
 void kernel_main(void)
@@ -15,20 +16,14 @@ void kernel_main(void)
 	generic_timer_init();
 	enable_interrupt_controller();
 	disable_irq();
-	init_I2S();
+
+	generate_square_signal();
+
+	enable_I2S();
+	dma_init();
+	pcm_start_transmission();
 
 	while (1){
-	/*
-		if (i < 32)
-			send_data_to_pcm(0xFFFFFFFF);
-		else {
-			send_data_to_pcm(0);
-			if (i == 64)
-				i = 0;
-		}
-		i++;*/
-		//uart_send('A');
-		send_data_to_pcm();
 	}
 		
 }

@@ -9,7 +9,7 @@
 
 static void pcm_fill_fifo() {
     for (unsigned i = 0; i < 64; i++) {
-        *(volatile unsigned*)PCM_FIFO_A = 0;
+            *(volatile unsigned*)PCM_FIFO_A = 0x8000800; 
     }
 }
 
@@ -84,10 +84,10 @@ static void pcm_init_tx() {
     *(volatile unsigned*)PCM_TXC_A = tx_a;
 }
 
-void init_I2S(){
+void enable_I2S(){
     pcm_init_clock();
     pcm_init_gpio();
-
+    *(volatile unsigned*)PCM_DREQ_A = (32 << 8); //half of the PCM FIFO request DMA to send data
 
     *(volatile unsigned*)PCM_CS_A = 1;  //EN PCM interface
     *(volatile unsigned*)PCM_CS_A |= (1 << 25); //disable StAndyBy ram
@@ -99,18 +99,20 @@ void init_I2S(){
     *(volatile unsigned*)PCM_CS_A |= (1 << 24);
     while(!(*(volatile unsigned*)PCM_CS_A & (1 << 24))); //wait 2 PCM clock
 
-    //*(volatile unsigned*)PCM_CS_A |= (1 << 9); //generate TX DMA DREQ when TX FIFO level is lower than TXREQ
+    *(volatile unsigned*)PCM_CS_A |= (1 << 9); //enable DMA REQ
+    
 
-    //*(volatile unsigned*)PCM_DREQ_A = 
+    //*(volatile unsigned*)PCM_CS_A &= (~(0b11 << 5)); //set TX FIFO threshold for TXW when fifo is half //useless with DMA
+    //*(volatile unsigned*)PCM_CS_A |= (0b10 << 5);
 
-    *(volatile unsigned*)PCM_CS_A &= (~(0b11 << 5)); //set TX FIFO threshold for TXW when fifo is half
-    *(volatile unsigned*)PCM_CS_A |= (0b10 << 5);
+    //pcm_fill_fifo();
+}
 
-    pcm_fill_fifo();
-
+void pcm_start_transmission() {
     *(volatile unsigned*)PCM_CS_A |= (1 << 2);  //enable transmission
 }
 
+/*
 void send_data_to_pcm() {
     static unsigned int state_freq = 0;
     const unsigned int do_incr = 42852281; // 440 * 2^(32) / 44100
@@ -130,4 +132,4 @@ void send_data_to_pcm() {
             state_freq += do_incr;
         }
     }
-}
+}*/
