@@ -5,6 +5,7 @@
 #include "utils.h"
 #include "i2s.h"
 #include "dma.h"
+#include "input.h"
 
 
 void kernel_main(void)
@@ -17,15 +18,18 @@ void kernel_main(void)
 	enable_interrupt_controller();
 	disable_irq();
 
-	init_buffer();
+	input_init();	//init buttons of input
+	init_buffer();	//set the DMA buffer for PCM
 
-	enable_I2S();
-	dma_init();
-	pcm_start_transmission();
+	pcm_init();		//init PCM
+	dma_init();		//init DMA
+	pcm_start_transmission();	//PCM TXON enable
 
 	unsigned alt_buffer = 0;
 	unsigned state = 0;
 	while (1){
+	
+		
 		if (get_free_buffer() == 0 && alt_buffer == 0) {
 			process_buffer(&dma_buffer[0], &state);
 			alt_buffer = 1;

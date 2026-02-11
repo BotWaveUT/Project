@@ -5,15 +5,6 @@
 #include "math.h"
 
 
-
-
-static void pcm_fill_fifo() {
-    for (unsigned i = 0; i < 64; i++) {
-            *(volatile unsigned*)PCM_FIFO_A = 0x8000800; 
-    }
-}
-
-
 static void pcm_init_gpio()
 {
     unsigned int FSEL1 = *(volatile unsigned*)GPFSEL1; //GPIO 18 - 19
@@ -84,7 +75,7 @@ static void pcm_init_tx() {
     *(volatile unsigned*)PCM_TXC_A = tx_a;
 }
 
-void enable_I2S(){
+void pcm_init(){
     pcm_init_clock();
     pcm_init_gpio();
     
@@ -113,25 +104,3 @@ void enable_I2S(){
 void pcm_start_transmission() {
     *(volatile unsigned*)PCM_CS_A |= (1 << 2);  //enable transmission
 }
-
-/*
-void send_data_to_pcm() {
-    static unsigned int state_freq = 0;
-    const unsigned int do_incr = 42852281; // 440 * 2^(32) / 44100
-
-    if (*(volatile unsigned*)PCM_CS_A & (1 << 17)) {
-        for (unsigned char i = 0; i < 32; i+2) {
-            if (state_freq >= 4294967296)
-                state_freq -= 4294967296;
-            
-            float s = sinf(state_freq);
-            
-            short value = (short)(s * 32767.0f);
-            
-            *(volatile unsigned*)PCM_FIFO_A = ((unsigned short)value << 16) | (unsigned short)value;
-            *(volatile unsigned*)PCM_FIFO_A = ((unsigned short)value << 16) | (unsigned short)value;
-            
-            state_freq += do_incr;
-        }
-    }
-}*/

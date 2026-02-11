@@ -14,9 +14,9 @@ void init_buffer() {
 }
 
 int get_free_buffer() {
-    if (*(volatile unsigned*)DMA_CONBLK_AD_1 == (unsigned)((unsigned)(&DMA_BLOCK_1) | 0xC0000000))
+    if (*(volatile unsigned*)DMA_CONBLK_AD_1 == (unsigned)((unsigned long)(&DMA_BLOCK_1) | 0xC0000000))
         return 1;
-    else if (*(volatile unsigned*)DMA_CONBLK_AD_1 ==(unsigned)((unsigned)(&DMA_BLOCK_2) | 0xC0000000))
+    else if (*(volatile unsigned*)DMA_CONBLK_AD_1 ==(unsigned)((unsigned long)(&DMA_BLOCK_2) | 0xC0000000))
         return 0;
     
     return 2;

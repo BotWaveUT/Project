@@ -19,7 +19,7 @@
 #define CM_PASSWORD 0x5A000000
 #define BUSY        7
 
-void enable_I2S();
+void pcm_init();
 void pcm_start_transmission();
 
 
