@@ -39,6 +39,8 @@ struct Control_Block {
 extern unsigned dma_buffer[DMA_BUFFER_SIZE];
 
 void dma_init();
-void generate_square_signal();
+void init_buffer();
+int get_free_buffer();
+void process_buffer(unsigned* buffer, unsigned* pstate);
 
 #endif //__DMA_H__

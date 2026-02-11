@@ -17,13 +17,23 @@ void kernel_main(void)
 	enable_interrupt_controller();
 	disable_irq();
 
-	generate_square_signal();
+	init_buffer();
 
 	enable_I2S();
 	dma_init();
 	pcm_start_transmission();
 
+	unsigned alt_buffer = 0;
+	unsigned state = 0;
 	while (1){
+		if (get_free_buffer() == 0 && alt_buffer == 0) {
+			process_buffer(&dma_buffer[0], &state);
+			alt_buffer = 1;
+		}
+		else if (get_free_buffer() == 1 && alt_buffer == 1) {
+			process_buffer(&dma_buffer[DMA_BUFFER_SIZE_HALF], &state);
+			alt_buffer = 0;
+		}
 	}
 		
 }

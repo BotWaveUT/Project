@@ -6,21 +6,37 @@ static struct Control_Block DMA_BLOCK_2;
 
 unsigned dma_buffer[DMA_BUFFER_SIZE] = {0};
 
-void generate_square_signal() {
-    int space = 0;
+void init_buffer() {
+    
     for (int i = 0; i < DMA_BUFFER_SIZE; i++) {
-        if (space < 16) {
-            dma_buffer[i] = 0x8FFF8fff;
-            space++;
-        } else if (space < 32 ){
-            dma_buffer[i] = 0;
-            space++;
-        } else {
-            space = 0;
-        }
-        
+        dma_buffer[i] = 0;
     }
 }
+
+int get_free_buffer() {
+    if (*(volatile unsigned*)DMA_CONBLK_AD_1 == (unsigned)((unsigned)(&DMA_BLOCK_1) | 0xC0000000))
+        return 1;
+    else if (*(volatile unsigned*)DMA_CONBLK_AD_1 ==(unsigned)((unsigned)(&DMA_BLOCK_2) | 0xC0000000))
+        return 0;
+    
+    return 2;
+}
+
+void process_buffer(unsigned* buffer, unsigned* pstate) {
+    for (unsigned i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {
+        if (*pstate < 50)
+            buffer[i] = 0x30003000;
+        else
+            buffer[i] = 0x0;
+        (*pstate)++;
+
+        if (*pstate >= 100) {
+            (*pstate) = 0;
+        }
+    }
+    
+}
+
 
 void dma_init_controlBlock() {
     DMA_BLOCK_1.TI = (2 << 16) | (1 << 8) | (1 << 6) | (1 << 3); //set PERMAP TO PCM TX | increment source addrr after read | wait PCM to send data to write

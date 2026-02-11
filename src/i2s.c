@@ -87,7 +87,7 @@ static void pcm_init_tx() {
 void enable_I2S(){
     pcm_init_clock();
     pcm_init_gpio();
-    *(volatile unsigned*)PCM_DREQ_A = (32 << 8); //half of the PCM FIFO request DMA to send data
+    
 
     *(volatile unsigned*)PCM_CS_A = 1;  //EN PCM interface
     *(volatile unsigned*)PCM_CS_A |= (1 << 25); //disable StAndyBy ram
@@ -98,6 +98,8 @@ void enable_I2S(){
     *(volatile unsigned*)PCM_CS_A |= (1 << 3); //Assert to clear TX FIFO
     *(volatile unsigned*)PCM_CS_A |= (1 << 24);
     while(!(*(volatile unsigned*)PCM_CS_A & (1 << 24))); //wait 2 PCM clock
+
+    *(volatile unsigned*)PCM_DREQ_A = (32 << 8); //half of the PCM FIFO request DMA to send data
 
     *(volatile unsigned*)PCM_CS_A |= (1 << 9); //enable DMA REQ
     
