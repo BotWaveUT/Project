@@ -128,10 +128,14 @@ void process_output(unsigned *buffer_out) {
 
 		output_tmp[i] /= 10.;
 
-		if (output_tmp[i] > 1.0)
-	   		output_tmp[i] = 1.0;
-		else if (output_tmp[i] < -1.0)
-			output_tmp[i] = -1.0;
+		//soft clipping
+		if (output_tmp[i] >= 1.0)
+	   		output_tmp[i] = (2.0f/3.0f);
+		else if (output_tmp[i] <= -1.0)
+			output_tmp[i] = -(2.0f/3.0f);
+		else
+			output_tmp[i] = output_tmp[i] - ((output_tmp[i] * output_tmp[i] * output_tmp[i]) / 3.0f);
+
 
 		unsigned short s = (signed short)(output_tmp[i] * 30000);
 			
