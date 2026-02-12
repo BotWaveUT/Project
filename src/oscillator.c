@@ -169,8 +169,8 @@ void synth_init(void) {
 	oscillators[6].button = BUTT_SI;
 
 	// init first DMA buffer
-	process_output(&dma_buffer[0]);
-	process_output(&dma_buffer[DMA_BUFFER_SIZE_HALF]);
+	//process_output(&dma_buffer[0]);
+	//process_output(&dma_buffer[DMA_BUFFER_SIZE_HALF]);
 }
 
 unsigned long reverse35(unsigned long v)

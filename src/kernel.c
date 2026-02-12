@@ -14,25 +14,27 @@ void kernel_main(void)
 	init_printf(0, putc);
 
 	irq_vector_init();
-	generic_timer_init();
-	enable_interrupt_controller();
-	disable_irq();
+	dma_enable_interrupt();
+	enable_irq();
+
+	init_buffer();
 
 	init_phase_inc_table();
-	synth_init();
+	//synth_init();
+
+
 
 	pcm_init();		//init PCM
 	dma_init();		//init DMA
-
-	
-
 	pcm_start_transmission();	//PCM TXON enable
 
-	oscillators[0].state = ON;
+	unsigned state = 0;
+
+	//oscillators[0].state = ON;
 
 	while (1){
 		//value_keyboard = reading_inputs();
-
+		/*
 		if(first_half_empty){
 
 			process_output(&dma_buffer[0]);
@@ -44,7 +46,14 @@ void kernel_main(void)
 			process_output(&dma_buffer[DMA_BUFFER_SIZE_HALF]);
 			second_half_empty = 0;
 
+		}*/
+		if (first_half_empty) {
+			process_buffer(&dma_buffer[0], &state);
+			first_half_empty = 0;
 		}
-
+		else if (second_half_empty) {
+			process_buffer(&dma_buffer[DMA_BUFFER_SIZE_HALF], &state);
+			second_half_empty = 0;
+		}
     }	
 }

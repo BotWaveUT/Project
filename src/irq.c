@@ -3,7 +3,7 @@
 #include "timer.h"
 #include "entry.h"
 #include "peripherals/irq.h"
-
+#include "dma.h"
 const char *entry_error_messages[] = {
     "SYNC_INVALID_EL1t",
     "IRQ_INVALID_EL1t",
@@ -40,12 +40,13 @@ void show_invalid_entry_message(int type, unsigned long esr, unsigned long addre
 void handle_irq(void)
 {
     // Each Core has its own pending local intrrupts register
-    unsigned int irq = get32(INT_SOURCE_0);
+    /*unsigned int irq = get32(INT_SOURCE_0);
     switch (irq) {
         case (GENERIC_TIMER_INTERRUPT):
             handle_generic_timer_irq();
             break;
         default:
             printf("Unknown pending irq: %x\r\n", irq);
-    }
+    }*/
+   handler_dma_interrupt();
 }

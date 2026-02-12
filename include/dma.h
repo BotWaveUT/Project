@@ -40,7 +40,8 @@ extern unsigned dma_buffer[DMA_BUFFER_SIZE];
 
 void dma_init();
 void init_buffer();
-int get_free_buffer();
+void handler_dma_interrupt();
 void process_buffer(unsigned* buffer, unsigned* pstate);
+void dma_enable_interrupt();
 
 #endif //__DMA_H__
