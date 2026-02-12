@@ -20,7 +20,7 @@ void kernel_main(void)
 	init_buffer();
 
 	init_phase_inc_table();
-	//synth_init();
+	synth_init();
 
 
 
@@ -28,13 +28,17 @@ void kernel_main(void)
 	dma_init();		//init DMA
 	pcm_start_transmission();	//PCM TXON enable
 
-	unsigned state = 0;
+	oscillators[4].state = ON;
+	oscillators[4].amplitude = 1.f;
 
-	//oscillators[0].state = ON;
+	oscillators[6].state = ON;
+	oscillators[6].amplitude = 1.f;
+
+	unsigned state = 0;
 
 	while (1){
 		//value_keyboard = reading_inputs();
-		/*
+		
 		if(first_half_empty){
 
 			process_output(&dma_buffer[0]);
@@ -46,7 +50,8 @@ void kernel_main(void)
 			process_output(&dma_buffer[DMA_BUFFER_SIZE_HALF]);
 			second_half_empty = 0;
 
-		}*/
+		}
+		/*
 		if (first_half_empty) {
 			process_buffer(&dma_buffer[0], &state);
 			first_half_empty = 0;
@@ -54,6 +59,6 @@ void kernel_main(void)
 		else if (second_half_empty) {
 			process_buffer(&dma_buffer[DMA_BUFFER_SIZE_HALF], &state);
 			second_half_empty = 0;
-		}
+		}*/
     }	
 }

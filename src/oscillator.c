@@ -32,7 +32,7 @@ void init_phase_inc_table(void)
 {
     for (int i = 0; i < NB_NOTES_GrandTableau; i++)
     {
-        phase_inc_table[i] = 2.0f * PI * tableauDesNotes[i] / F_SAMPLE;
+        phase_inc_table[i] = tableauDesNotes[i] / F_SAMPLE;
     }
 }
 
@@ -69,20 +69,20 @@ void process_oscillator(float *buffer_out, Oscillator *osc) {
 
 	for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++){
 		osc->phase += osc->phase_inc;
-			if (osc->phase >= 2.0f * PI)  osc->phase -= 2.0f * PI;
+			if (osc->phase >= 1.0f)  osc->phase -= 1.0f;
 		float sample =  sinf(osc->phase);
 		buffer_out[i] = sample;
 	}
 }
 
 void process_output(unsigned *buffer_out) {
-    /* Génère le signal audio complet */
+    //Génère le signal audio complet
 
-	float target_grain;
+	//float target_grain;
 	float output_tmp[DMA_BUFFER_SIZE_HALF]; // output_tmp : the temporary output buffer that will recieve the added amplified sin signals
-	int active_voices = 0;
+	//int active_voices = 0;
 
-    static float current_grain = 1.0f;
+    //static float current_grain = 1.0f;
 
 
 	for(int i = 0; i < DMA_BUFFER_SIZE_HALF; i++){
@@ -96,36 +96,53 @@ void process_output(unsigned *buffer_out) {
         	float tmp_osc[DMA_BUFFER_SIZE_HALF];
 
         	// write in tmp buffer
-            process_oscillator(&tmp_osc[0], &oscillators[i]);
-            enveloppe_oscillator(&tmp_osc[0], &oscillators[i]);
+            process_oscillator(tmp_osc, &oscillators[i]);
+           // enveloppe_oscillator(tmp_osc, &oscillators[i]);
 
 
-            /* additionne le tmp au buffer_out...*/
+            //additionne le tmp au buffer_out...
             for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++){
-            	output_tmp[i] += tmp_osc[i]* amplitude_dyn;
+            	output_tmp[i] += tmp_osc[i];
             }
-            active_voices += 1;
+            //active_voices += 1;
 
         }
     }
     // divide global amplitude depending on the number of oscillators and write buffer_out
-
-    if (active_voices > 0 ){
+/*    if (active_voices > 0 ){
     	target_grain = 1.0f / (float)active_voices;
     }
     else{
     	target_grain = 1.0f;
     }
 
-
    for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {
 
 	   current_grain += (target_grain - current_grain) / DMA_BUFFER_SIZE_HALF;
 
 	   float s = output_tmp[i] * current_grain;
-	   buffer_out[i] = ((signed short)s << 16) | (signed short)s;
+	   buffer_out[i] = (unsigned)((((unsigned)s) << 16) | (unsigned)s);
+   }*/
+
+   for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {
+
+		output_tmp[i] /= 10.;
+
+		if (output_tmp[i] > 1.0)
+	   		output_tmp[i] = 1.0;
+		else if (output_tmp[i] < -1.0)
+			output_tmp[i] = -1.0;
+
+		unsigned short s = (signed short)(output_tmp[i] * 30000);
+			
+		/* if (s < 0) {
+		buffer_out[i] = 0;
+	   } else*/
+	   	buffer_out[i] = (((unsigned)s << 16) | (unsigned)s);
    }
 }
+
+
 
 void change_octaves(){
 	for (int i = 0; i < N_OSCILLATORS; i++) {
@@ -152,14 +169,12 @@ void synth_init(void) {
     et les paramètres globaux du synthé */
 
 	for (int i = 0; i < N_OSCILLATORS; i++) {
-			Oscillator o;
-			o.phase = 0.0f;
-			o.amplitude = 0.0f;
-			o.state = OFF;
-			o.phase_inc = phase_inc_table[i+7*octaveSelect];
-			oscillators[i] = o;
-
+			oscillators[i].phase = 0.0f;
+			oscillators[i].amplitude = 0.0f;
+			oscillators[i].state = OFF;
+			oscillators[i].phase_inc = phase_inc_table[i+7*octaveSelect];
 	}
+
 	oscillators[0].button = BUTT_DO;
 	oscillators[1].button = BUTT_RE;
 	oscillators[2].button = BUTT_MI;
