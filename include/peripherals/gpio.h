@@ -3,6 +3,7 @@
 
 #include "peripherals/base.h"
 
+#define GPFSEL0         (PBASE+0x00200000)
 #define GPFSEL1         (PBASE+0x00200004)
 #define GPFSEL2         (PBASE+0x00200008)
 #define GPSET0          (PBASE+0x0020001C)
@@ -11,5 +12,10 @@
 #define GPPUDCLK0       (PBASE+0x00200098)
 #define GPAREN0         (PBASE+0x0020007C)  //Asynchronous input
 #define GPEDS0          (PBASE+0x00200040)  //Event on pin
+#define GPREN0          (PBASE+0x0020004C)
+#define GPREN1          (PBASE+0x00200050)
+#define GPLEV0          (PBASE+0x00200034)
+#define GPLEV1          (PBASE+0x00200038)
+
 
 #endif  /*_P_GPIO_H */

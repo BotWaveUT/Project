@@ -2,6 +2,7 @@
 #define __OSCILLATOR_H__
 
 #define N_OSCILLATORS 7
+#include <stdint.h>
 
 #define DEC_AMPLITUDE_NOTE 0.0002
 #define RISING_AMPLITUDE_NOTE 0.0005
@@ -15,7 +16,7 @@
 
 #define NB_NOTES_GrandTableau 49  // jusqu'à 3951.1 Hz
 
-typedef enum { ON, OFF } OscillatorState;
+typedef enum { ON, OFF, RELEASE } OscillatorState;
 
 typedef struct
 {
@@ -27,6 +28,8 @@ typedef struct
 } Oscillator;
 
 extern volatile unsigned long value_keyboard;
+extern volatile unsigned long old_keyboard;
+
 extern volatile unsigned char first_half_empty;
 extern volatile unsigned char second_half_empty;
 extern Oscillator oscillators[N_OSCILLATORS];
@@ -34,5 +37,6 @@ extern Oscillator oscillators[N_OSCILLATORS];
 void process_output(unsigned *buffer_out);
 void init_phase_inc_table(void);
 void synth_init(void);
+void read_buttons();
 
 #endif
