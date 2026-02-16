@@ -30,6 +30,18 @@ void kernel_main(void) {
     Init_Pin_Keyboard();
     init_led();
 
+    // oscillators[3].state = ON;
+    // oscillators[3].amplitude = 1.f;
+
+    // oscillators[4].state = ON;
+    // oscillators[4].amplitude = 1.f;
+
+    // oscillators[5].state = ON;
+    // oscillators[5].amplitude = 1.f;
+
+    // oscillators[6].state = ON;
+    // oscillators[6].amplitude = 1.f;
+
     while (1) {
         read_buttons();
 

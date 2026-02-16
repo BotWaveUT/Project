@@ -91,7 +91,8 @@ void put_release(int butt_id) {
     int i = 0, found = 0;
     while (!found && (i < N_OSCILLATORS)) {
         if (oscillators[i].button == butt_id) {
-            oscillators[i].state = RELEASE;
+            // oscillators[i].state = RELEASE;
+            oscillators[i].state = OFF;
             found = 1;
         }
         i++;
@@ -183,7 +184,7 @@ void process_output(unsigned *buffer_out) {
 
             // write in tmp buffer
             process_oscillator(tmp_osc, &oscillators[i]);
-            enveloppe_oscillator(tmp_osc, &oscillators[i]);
+            // enveloppe_oscillator(tmp_osc, &oscillators[i]);
 
             // additionne le tmp au buffer_out...
             for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {
@@ -259,7 +260,8 @@ void synth_init(void) {
         oscillators[i].amplitude = 0.0f;
         oscillators[i].state = OFF;
         oscillators[i].phase_inc = phase_inc_table[i];
-        oscillators[i].button = i + 1;
+        // oscillators[i].button = i + 1;
+        oscillators[i].button = -1;
     }
 
     // oscillators[0].button = BUTT_DO;

@@ -45,15 +45,15 @@ void gpio_clear(int nb_pin) { put32(GPCLR0, (1 << nb_pin)); }
 
 void toggle_sh() {
     gpio_clear(SH_LD);
-    delay_tick(200);
+    delay(200);
     gpio_set(SH_LD);
-    delay_tick(200);
+    delay(200);
 }
 void toggle_clk() {
     gpio_set(CLK);
-    delay_tick(100);
+    delay(100);
     gpio_clear(CLK);
-    delay_tick(100);
+    delay(100);
 }
 
 void init_led() {
