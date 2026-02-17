@@ -91,8 +91,8 @@ void put_release(int butt_id) {
     int i = 0, found = 0;
     while (!found && (i < N_OSCILLATORS)) {
         if (oscillators[i].button == butt_id) {
-            // oscillators[i].state = RELEASE;
-            oscillators[i].state = OFF;
+            oscillators[i].state = RELEASE;
+            // oscillators[i].state = OFF;
             found = 1;
         }
         i++;
@@ -114,6 +114,7 @@ int find_off() {
     }
     return -1;
 }
+
 /*met l'oscil en mode ON*/
 void set_oscillator(int note, int i) {
     oscillators[i].button = note;
@@ -149,17 +150,32 @@ void adress_pressed_buttons(uint64_t v) {
     }
 }
 
+/*Nb oscillators in state on*/
+int nb_on() {
+    int v = 0;
+    for (int i = 0; i < N_OSCILLATORS; i++) {
+        if (oscillators[i].state == ON) {
+            v++;
+        }
+    }
+    return v;
+}
+
 void read_buttons() {
     value_keyboard = reading_inputs();
-    // if (value_keyboard != old_keyboard) {
-    unsigned long newly_pressed = ~old_keyboard & value_keyboard;
-    unsigned long newly_released = old_keyboard & ~value_keyboard;
+    // value_keyboard = 0xF00;
+    if (value_keyboard != old_keyboard) {
+        uint64_t newly_pressed = ~old_keyboard & value_keyboard;
+        uint64_t newly_released = old_keyboard & ~value_keyboard;
 
-    search_released(newly_released);
-    adress_pressed_buttons(newly_pressed);
-
-    old_keyboard = value_keyboard;
-    // }
+        search_released(newly_released);
+        adress_pressed_buttons(newly_pressed);
+        // if (nb_on() > 3)
+        //     led_on();
+        // else
+        //     led_off();
+        old_keyboard = value_keyboard;
+    }
 }
 
 void process_output(unsigned *buffer_out) {
@@ -184,7 +200,7 @@ void process_output(unsigned *buffer_out) {
 
             // write in tmp buffer
             process_oscillator(tmp_osc, &oscillators[i]);
-            // enveloppe_oscillator(tmp_osc, &oscillators[i]);
+            enveloppe_oscillator(tmp_osc, &oscillators[i]);
 
             // additionne le tmp au buffer_out...
             for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {

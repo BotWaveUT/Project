@@ -42,7 +42,10 @@ void kernel_main(void) {
     // oscillators[6].state = ON;
     // oscillators[6].amplitude = 1.f;
 
+    
+
     while (1) {
+        
         read_buttons();
 
         if (first_half_empty) {

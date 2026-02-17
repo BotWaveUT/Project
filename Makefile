@@ -1,6 +1,6 @@
 CHAINPREFIX ?= aarch64-none-elf-
 
-COPS = -Wall -nostdlib -fno-stack-protector -nostartfiles -ffreestanding -Iinclude -g -O0 #-DUSE_QEMU
+COPS = -Wall -nostdlib -fno-stack-protector -nostartfiles -ffreestanding -Iinclude -g -O1 #-DUSE_QEMU
 ASMOPS = -Iinclude -g #-DUSE_QEMU
 
 BUILD_DIR = build

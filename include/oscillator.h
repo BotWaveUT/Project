@@ -1,7 +1,7 @@
 #ifndef __OSCILLATOR_H__
 #define __OSCILLATOR_H__
 
-#define N_OSCILLATORS 7
+#define N_OSCILLATORS 10
 #include <stdint.h>
 
 #define DEC_AMPLITUDE_NOTE 0.0002
