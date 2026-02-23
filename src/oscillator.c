@@ -170,7 +170,7 @@ int nb_on() {
 
 void read_buttons() {
     value_keyboard = reading_inputs();
-    // value_keyboard = 0xF00;
+    //value_keyboard = 0xFF6;
     if (value_keyboard != old_keyboard) {
         uint64_t newly_pressed = ~old_keyboard & value_keyboard;
         uint64_t newly_released = old_keyboard & ~value_keyboard;
@@ -234,7 +234,7 @@ void process_output(unsigned *buffer_out) {
 
     for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {
 
-        output_tmp[i] /= 10.;
+        output_tmp[i] /= N_OSCILLATORS;
 
         // soft clipping
         if (output_tmp[i] >= 1.0)
