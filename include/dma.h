@@ -3,8 +3,8 @@
 
 #include "peripherals/base.h"
 
-#define DMA_BUFFER_SIZE  2048
-#define DMA_BUFFER_SIZE_HALF 1024
+#define DMA_BUFFER_SIZE  256
+#define DMA_BUFFER_SIZE_HALF 128
 
 
 #define DMA_BASE            (PBASE + 0x00007000)
