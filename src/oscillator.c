@@ -71,12 +71,13 @@ void process_oscillator(float *buffer_out, Oscillator *osc) {
        applique le fade in/out et écrit
        le résultat dans buffer_out */
 
-    for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {
-        osc->phase += osc->phase_inc;
+    for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i=i+2) {
+        osc->phase += osc->phase_inc*2;
         if (osc->phase >= 1.0f)
             osc->phase -= 1.0f;
         float sample = sinf(osc->phase);
         buffer_out[i] = sample;
+        buffer_out[i+1] = sample;
     }
 }
 char Butt_pushed(int butt_id, uint64_t keyboard) {

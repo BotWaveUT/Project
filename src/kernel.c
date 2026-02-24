@@ -30,15 +30,15 @@ void kernel_main(void) {
 
     while (1) {
         
-        
+        if(first_half_empty || second_half_empty){
+            read_buttons();
+        }
 
         if (first_half_empty) {
-            read_buttons();
             process_output(&dma_buffer[0]);
             first_half_empty = 0;
         }
         if (second_half_empty) {
-            read_buttons();
             process_output(&dma_buffer[DMA_BUFFER_SIZE_HALF]);
             second_half_empty = 0;
         }
