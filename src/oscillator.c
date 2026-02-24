@@ -3,8 +3,8 @@
 #include "i2s.h"
 #include "input.h"
 #include "irq.h"
-#include "math.h"
 #include "mini_uart.h"
+#include "table.h"
 #include "timer.h"
 #include "utils.h"
 #include <stdint.h>
@@ -40,9 +40,9 @@ void init_phase_inc_table(void) {
     }
 }
 
-void enveloppe_oscillator(float *buffer_out, Oscillator *osc) {    
+void enveloppe_oscillator(float *buffer_out, Oscillator *osc) {
     // fade in
-    if (osc->state == ON ) {
+    if (osc->state == ON) {
         for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i++) {
             if (osc->amplitude < 1) {
                 osc->amplitude += RISING_AMPLITUDE_NOTE;
@@ -71,13 +71,13 @@ void process_oscillator(float *buffer_out, Oscillator *osc) {
        applique le fade in/out et écrit
        le résultat dans buffer_out */
 
-    for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i=i+2) {
-        osc->phase += osc->phase_inc*2;
+    for (int i = 0; i < DMA_BUFFER_SIZE_HALF; i = i + 2) {
+        osc->phase += osc->phase_inc * 2;
         if (osc->phase >= 1.0f)
             osc->phase -= 1.0f;
-        float sample = sinf(osc->phase);
+        float sample = accessLUT(osc->phase);
         buffer_out[i] = sample;
-        buffer_out[i+1] = sample;
+        buffer_out[i + 1] = sample;
     }
 }
 char Butt_pushed(int butt_id, uint64_t keyboard) {
@@ -170,7 +170,7 @@ int nb_on() {
 
 void read_buttons() {
     value_keyboard = reading_inputs();
-    //value_keyboard = 0xFF6;
+    // value_keyboard = 0xFF6;
     if (value_keyboard != old_keyboard) {
         uint64_t newly_pressed = ~old_keyboard & value_keyboard;
         uint64_t newly_released = old_keyboard & ~value_keyboard;
@@ -197,7 +197,7 @@ void process_output(unsigned *buffer_out) {
     }
 
     for (int i = 0; i < N_OSCILLATORS; i++) {
-        if (oscillators[i].state != OFF ) {
+        if (oscillators[i].state != OFF) {
 
             float tmp_osc[DMA_BUFFER_SIZE_HALF];
 
@@ -222,7 +222,7 @@ void process_output(unsigned *buffer_out) {
         if (val >= 1.0)
             res = (2.0f / 3.0f);
         else if (val <= -1.0)
-           res = -(2.0f / 3.0f);
+            res = -(2.0f / 3.0f);
         else
             res = val - ((val * val * val) / 3.0f);
 
@@ -235,7 +235,6 @@ void process_output(unsigned *buffer_out) {
     }
 }
 
-
 void synth_init(void) {
     /* Initialise les oscillateurs, les buffers audio
     et les paramètres globaux du synthé */
@@ -247,5 +246,4 @@ void synth_init(void) {
         oscillators[i].phase_inc = phase_inc_table[i];
         oscillators[i].button = -1;
     }
-
 }
